@@ -1,0 +1,16 @@
+{
+  "ballotID": "12345",
+  "election": "Parlimentary Election 2021",
+  "parties": [
+    {
+      "name": "Sri Lanka Freedom Party"
+    },
+    {
+      "name": "United National Party"
+    },
+    {
+      "name": "Janatha Vimukthi Peramuna"
+    }
+  ],
+  "noPerParty": 20
+}
