@@ -53,12 +53,12 @@ public class RequestSecretActivity extends AppCompatActivity {
                 GetNumber();
                 new CountDownTimer(30000, 1000) {
                     public void onTick(long millisUntilFinished) {
-                        textSecretResend.setText("Wait " + millisUntilFinished / 1000 + "s to request resend");
+                        textSecretResend.setText( "Please Wait " + millisUntilFinished / 1000 + "s to Request a Resend");
                     }
 
                     public void onFinish() {
                         buttonRequest.setClickable(true);
-                        buttonRequest.setText("ReSend");;
+                        buttonRequest.setText(R.string.resend);;
                     }
                 }.start();
             }
@@ -77,7 +77,7 @@ public class RequestSecretActivity extends AppCompatActivity {
             TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
             String phoneNumber = telephonyManager.getLine1Number();
             textPhoneNumber.setVisibility(View.VISIBLE);
-            textPhoneNumber.setText("Automatically Extracted Phone Number " + phoneNumber);
+            textPhoneNumber.setText(R.string.extracted_phone + phoneNumber);
             return;
         } else {
             // Ask for permission
