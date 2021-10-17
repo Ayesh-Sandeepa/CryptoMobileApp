@@ -17,6 +17,10 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
+       <activity
+            android:name=".VotingActivity"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
