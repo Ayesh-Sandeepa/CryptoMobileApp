@@ -22,14 +22,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        buttonSecret = (Button)findViewById(R.id.button);
-        textSecret = (EditText)findViewById(R.id.editTextTextPassword);
+        buttonSecret = (Button)findViewById(R.id.buttonSecretSubmit);
+        textSecret = (EditText)findViewById(R.id.editTextSecret);
 
-        buttonOTP = (Button)findViewById(R.id.button2);
-        textOTP = (EditText)findViewById(R.id.editTextTextPassword2);
+        buttonOTP = (Button)findViewById(R.id.buttonSubmitOTP);
+        textOTP = (EditText)findViewById(R.id.editTextOTP);
 
 
-        tx1 = (TextView)findViewById(R.id.textView2);
+        tx1 = (TextView)findViewById(R.id.textViewOTP);
 
         textOTP.setVisibility(View.GONE);
         buttonOTP.setVisibility(View.GONE);
