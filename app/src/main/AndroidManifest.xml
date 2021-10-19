@@ -11,11 +11,11 @@
         android:theme="@style/Theme.CryptoMobileApp">
         <activity
             android:name=".HomeActivity"
-            android:exported="false" >
+            android:exported="true" >
             <intent-filter>
-                <action android:name="android.intent.action.HomeActivity" />
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -43,9 +43,9 @@
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MainActivity" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
