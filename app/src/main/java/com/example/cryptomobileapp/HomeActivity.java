@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
         voteReqButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), VotingActivity.class);
+                Intent intent = new Intent(view.getContext(), LoginActivity.class);
                 startActivity(intent);
             }
         });
