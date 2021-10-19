@@ -24,7 +24,7 @@ public class HomeActivity extends AppCompatActivity {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(".RequestSecretActivity");
+                Intent intent = new Intent(view.getContext(), RequestSecretActivity.class);
                 startActivity(intent);
             }
         });
@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
         voteReqButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(".VotingActivity");
+                Intent intent = new Intent(view.getContext(), VotingActivity.class);
                 startActivity(intent);
             }
         });
