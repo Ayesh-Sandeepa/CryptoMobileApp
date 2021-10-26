@@ -61,11 +61,6 @@ public class RSA {
             unsupportedEncodingException.printStackTrace();
         }
         BigInteger m = new BigInteger(msg);
-        SecureRandom random = null;
-        random = new SecureRandom();
-        byte[] randomBytes = new byte[10];
-        random.nextBytes(randomBytes);
-        r = new BigInteger(randomBytes);
         BigInteger encryptedMessage = m.modPow(e, n);
         return encryptedMessage;
     }

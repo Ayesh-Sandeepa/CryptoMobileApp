@@ -28,6 +28,7 @@ import static android.Manifest.permission.READ_SMS;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
 import java.util.concurrent.ExecutionException;
 
 
@@ -36,6 +37,7 @@ public class RequestSecretActivity extends AppCompatActivity {
     Button buttonRequest;
     EditText enterNIC;
     TextView textSecretCheck,textSecretResend,textPhoneNumber;
+    RSA rsa;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -48,6 +50,8 @@ public class RequestSecretActivity extends AppCompatActivity {
         textSecretCheck = (TextView)findViewById(R.id.textViewSecretCheck);
         textSecretResend = (TextView)findViewById(R.id.textViewSecretResend);
         textPhoneNumber = (TextView)findViewById(R.id.textViewPhoneNumber);
+
+        rsa=new RSA(this);
 
         textSecretCheck.setVisibility(View.GONE);
         textSecretResend.setVisibility(View.GONE);
@@ -90,6 +94,8 @@ public class RequestSecretActivity extends AppCompatActivity {
                 try {
                     String response=downloader.execute(requestPackage).get();
 
+                    JSONObject res=new JSONObject(response);
+
 
                     if(true){
                         RequestPackage requestPackage1 = new RequestPackage();
@@ -120,6 +126,8 @@ public class RequestSecretActivity extends AppCompatActivity {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
