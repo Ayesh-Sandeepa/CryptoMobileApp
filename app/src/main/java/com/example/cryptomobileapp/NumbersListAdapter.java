@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class NumbersListAdapter extends RecyclerView.Adapter<NumbersListAdapter.ViewHolder>{
 
     ArrayList<Integer> nos=new ArrayList<Integer>();
+    ArrayList<Integer> votedNumbers=new ArrayList<>();
     int noPerParty;
 
     public NumbersListAdapter(Context context){
@@ -66,13 +67,28 @@ public class NumbersListAdapter extends RecyclerView.Adapter<NumbersListAdapter.
         return noPerParty;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+
+    public ArrayList<Integer> getVotedNumbers(){
+        return votedNumbers;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public CheckBox checkBox;
 
         public ViewHolder(View itemView){
             super(itemView);
             this.checkBox=(CheckBox) itemView.findViewById(R.id.checkBox);
 
+            checkBox.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(ViewHolder.this.checkBox.isChecked()){
+                votedNumbers.add(ViewHolder.this.getAdapterPosition());
+            }else{
+                votedNumbers.remove(ViewHolder.this.getAdapterPosition());
+            }
         }
     }
 
