@@ -2,6 +2,7 @@ package com.example.cryptomobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,9 +10,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 public class HomeActivity extends AppCompatActivity {
     private static Button requestButton;
@@ -62,13 +66,19 @@ public class HomeActivity extends AppCompatActivity {
                 //Intent intent = new Intent(view.getContext(), LoginActivity.class);
                 //startActivity(intent);
                 Log.i("HTTP","Button clicked");
-                requestData(url);
+                try {
+                    requestData(url);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
     }
 
-    private void requestData(String url) {
+    private void requestData(String url) throws ExecutionException, InterruptedException {
         RequestPackage requestPackage = new RequestPackage();
         requestPackage.setMethod("GET");
         requestPackage.setUrl(url);
@@ -76,34 +86,19 @@ public class HomeActivity extends AppCompatActivity {
         Downloader downloader = new Downloader(); //Instantiation of the Async task
         //that’s defined below
 
-        downloader.execute(requestPackage);
+        String response=downloader.execute(requestPackage).get();
+        Log.i("HTTP",response);
+
+        Toast.makeText(this, response, Toast.LENGTH_LONG).show();
     }
 
-    private class Downloader extends AsyncTask<RequestPackage, String, String> {
-        @Override
-        protected String doInBackground(RequestPackage... params) {
-            Log.i("HTTP","Async task started");
-            return HttpManager.getData(params[0]);
-        }
 
-        //The String that is returned in the doInBackground() method is sent to the
-        // onPostExecute() method below. The String should contain JSON data.
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                //We need to convert the string in result to a JSONObject
-                JSONObject jsonObject = new JSONObject(result);
 
-                //The “ask” value below is a field in the JSON Object that was
-                //retrieved from the BitcoinAverage API. It contains the current
-                //bitcoin price
-                String price = jsonObject.getString("status");
 
-                //Now we can use the value in the mPriceTextView
-                resultReceived.setText(price);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
+
+
 }
+
+
+
