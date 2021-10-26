@@ -74,7 +74,7 @@ public class VotingActivity extends AppCompatActivity {
         partyRecyclerView.setAdapter(partyAdapter);
         numbersRecyclerView.setAdapter(numbersAdapter);
 
-        pk.setText(blind("a", (getPublicKeyParameters())).toString());
+        //pk.setText(blind("a", (getPublicKeyParameters())).toString());
 
     }
 
