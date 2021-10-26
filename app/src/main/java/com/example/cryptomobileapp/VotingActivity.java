@@ -1,5 +1,5 @@
 package com.example.cryptomobileapp;
-
+import java.util.Base64;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,21 +18,30 @@ import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 
 
 public class VotingActivity extends AppCompatActivity {
+
+    static BigInteger r;
+    static BigInteger n;
+    static BigInteger e;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +74,7 @@ public class VotingActivity extends AppCompatActivity {
         partyRecyclerView.setAdapter(partyAdapter);
         numbersRecyclerView.setAdapter(numbersAdapter);
 
-        pk.setText(getPublicKey());
+        pk.setText(blind("a", (getPublicKeyParameters())).toString());
 
     }
 
@@ -85,7 +94,7 @@ public class VotingActivity extends AppCompatActivity {
         return json;
     }
 
-    public String getPublicKey(){
+    public BigInteger[] getPublicKeyParameters(){
         try {
             InputStream is = getResources().openRawResource(R.raw.certificate);
             int size = is.available();
@@ -99,13 +108,56 @@ public class VotingActivity extends AppCompatActivity {
             RSAPublicKey rsaPub  = (RSAPublicKey)(publickey);
             BigInteger modulus = rsaPub.getModulus();
             BigInteger exponent = rsaPub.getPublicExponent();
-            String mod = exponent.toString();
-            return mod;
+            return new BigInteger[]{modulus, exponent};
         }catch (IOException ex){
             ex.printStackTrace();
         } catch (CertificateException e) {
             e.printStackTrace();
         }
-        return "hgj";
+        return null;
+    }
+
+    public BigInteger blind(String message, BigInteger[] publickeypara){
+        n = publickeypara[0]; // modulus
+        e = publickeypara[1]; // exponent
+        byte[] msg = new byte[0];  // if want hash the message and concert to byte
+        try {
+            msg = message.getBytes("UTF8");
+        } catch (UnsupportedEncodingException unsupportedEncodingException) {
+            unsupportedEncodingException.printStackTrace();
+        }
+        BigInteger m = new BigInteger(msg);
+        SecureRandom random = null;
+        random = new SecureRandom();
+        byte[] randomBytes = new byte[10];
+        random.nextBytes(randomBytes);
+        r = new BigInteger(randomBytes);
+        BigInteger blindedMsg = ((r.modPow(e, n)).multiply(m)).mod(n);
+        return blindedMsg;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String unblind(BigInteger blidedSignature){
+        BigInteger s = r.modInverse(n).multiply(blidedSignature).mod(n);
+        byte[] bytes = Base64.getEncoder().encode(s.toByteArray());
+        //byte[] bytes = new Base64().encode(s.toByteArray());
+        String signature = (new String(bytes));
+        return signature;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public boolean verify(String signature,String originalMsg, BigInteger[] publickeypara){
+        byte[] bytes = signature.getBytes();
+        byte[] decodedBytes = Base64.getDecoder().decode(bytes);
+        BigInteger sig = new BigInteger(decodedBytes);
+        n = publickeypara[0]; // modulus
+        e = publickeypara[1]; // exponent
+        BigInteger extractedByteMsg = sig.modPow(e, n);
+        String extractedMessage = new String(extractedByteMsg.toByteArray());
+        if(extractedMessage == originalMsg){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
