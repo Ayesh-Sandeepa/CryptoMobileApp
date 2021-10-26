@@ -1,4 +1,5 @@
 package com.example.cryptomobileapp;
+import java.security.MessageDigest;
 import java.util.Base64;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -157,22 +158,26 @@ public class VotingActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public BigInteger blind(String message, BigInteger[] publickeypara){
+        String hash;
         n = publickeypara[0]; // modulus
         e = publickeypara[1]; // exponent
         byte[] msg = new byte[0];  // if want hash the message and concert to byte
         try {
-            msg = message.getBytes("UTF8");
-        } catch (UnsupportedEncodingException unsupportedEncodingException) {
-            unsupportedEncodingException.printStackTrace();
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(message.getBytes());
+            byte[] digest = md.digest();
+            BigInteger m = new BigInteger(digest);
+            SecureRandom random = null;
+            random = new SecureRandom();
+            byte[] randomBytes = new byte[10];
+            random.nextBytes(randomBytes);
+            r = new BigInteger(randomBytes);
+            BigInteger blindedMsg = ((r.modPow(e, n)).multiply(m)).mod(n);
+            return blindedMsg;
+        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+            noSuchAlgorithmException.printStackTrace();
+            return null;
         }
-        BigInteger m = new BigInteger(msg);
-        SecureRandom random = null;
-        random = new SecureRandom();
-        byte[] randomBytes = new byte[10];
-        random.nextBytes(randomBytes);
-        r = new BigInteger(randomBytes);
-        BigInteger blindedMsg = ((r.modPow(e, n)).multiply(m)).mod(n);
-        return blindedMsg;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -191,8 +196,17 @@ public class VotingActivity extends AppCompatActivity implements AdapterView.OnI
         n = publickeypara[0]; // modulus
         e = publickeypara[1]; // exponent
         BigInteger extractedByteMsg = sig.modPow(e, n);
-        String extractedMessage = new String(extractedByteMsg.toByteArray());
-        if(extractedMessage == originalMsg){
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+            noSuchAlgorithmException.printStackTrace();
+        }
+        md.update(originalMsg.getBytes());
+        byte[] digest = md.digest();
+        BigInteger original = new BigInteger(digest);
+        //String extractedMessage = new String(extractedByteMsg.toByteArray());
+        if(extractedByteMsg == original){
             return true;
         }
         else{
