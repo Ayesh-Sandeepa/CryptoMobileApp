@@ -3,14 +3,18 @@
   "election": "Parlimentary Election 2021",
   "parties": [
     {
-      "name": "Sri Lanka Freedom Party"
+      "name": "Sri Lanka Freedom Party",
+      "isSelected": false
     },
     {
-      "name": "United National Party"
+      "name": "United National Party",
+      "isSelected": false
     },
     {
-      "name": "Janatha Vimukthi Peramuna"
+      "name": "Janatha Vimukthi Peramuna",
+      "isSelected": false
     }
   ],
+  "selectedParty": null,
   "noPerParty": 20
 }
