@@ -144,6 +144,7 @@ public class RequestSecretActivity extends AppCompatActivity {
         } else {
             // Ask for permission
             requestPermission();
+            return "";
         }
     }
 
